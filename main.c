@@ -1,7 +1,12 @@
 #include <stdio.h>
+#include "banco.h"
 
 int main(){
+  int pos = 0;
+  Cliente clientes[TOTAL];
+
   int opcao;
+
   do{
     printf("\nMenu principal\n");
     printf("1 - Adicionar cliente\n");
@@ -18,6 +23,20 @@ int main(){
     printf("%d\n", opcao);
     if(opcao > 7){
       printf("Opcao invalida\n");
+    }else if (opcao == 1){
+      adicionarC(clientes, &pos);
+    }else if (opcao == 2){
+      deletarC(clientes, &pos);
+    }else if (opcao == 3){
+      listarC(clientes, pos);
+    }else if(opcao == 4) {
+      debito(clientes, pos);
+    }else if (opcao == 5){
+      deposito(clientes, pos);
+    }else if (opcao == 6){
+      extrato(clientes, pos);
+    }else if (opcao == 7){
+      transferencia(clientes, pos);
     }else if (opcao == 0){
       printf("Saindo...");
       break;
