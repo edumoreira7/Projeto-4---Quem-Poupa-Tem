@@ -5,6 +5,8 @@ int main(){
   int pos = 0;
   Cliente clientes[TOTAL];
 
+  carregarC(clientes, TOTAL, &pos);
+
   int opcao;
 
   do{
@@ -40,6 +42,7 @@ int main(){
       transferencia(clientes, pos);
     }else if (opcao == 0){
       printf("Saindo...");
+      salvarC(clientes, TOTAL, pos);
       break;
     }
 

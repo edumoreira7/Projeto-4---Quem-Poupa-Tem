@@ -17,5 +17,5 @@ int extrato(Cliente clientes[], int pos);
 int transferencia(Cliente clientes[], int pos);
 
 int salvarC(Cliente clientes[], int total, int pos);
-int carregarC(Cliente clientes[], int total, int pos);
+int carregarC(Cliente clientes[], int total, int *pos);
 void clearBuffer();
