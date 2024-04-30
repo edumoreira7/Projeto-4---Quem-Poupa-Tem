@@ -33,9 +33,9 @@ int main(){
     }else if (opcao == 3){
       listarC(clientes, pos);
     }else if(opcao == 4) {
-      debito(clientes, pos);
+      debito(clientes, &pos);
     }else if (opcao == 5){
-      deposito(clientes, pos);
+      deposito(clientes, &pos);
     }else if (opcao == 6){
       extrato(clientes, pos);
     }else if (opcao == 7){
