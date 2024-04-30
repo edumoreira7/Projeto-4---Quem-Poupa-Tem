@@ -69,9 +69,41 @@ int transferencia(Cliente clientes[], int pos){
 }
 
 int salvarC(Cliente clientes[], int total, int pos){
+  FILE *f = fopen("clientes", "wb");
+  if(f == NULL)
+    return 1;
+
+  int e = fwrite(clientes, total, sizeof(Cliente), f);
+    if(e<=0)
+      return 2;
+
+  e = fwrite(&pos, 1, sizeof(int), f);
+  if(e<=0)
+    return 2;
+
+  e = fclose(f);
+  if(e!=0)
+    return 3;
+
   return 0;
 }
-int carregarC(Cliente clientes[], int total, int pos){
+int carregarC(Cliente clientes[], int total, int *pos){
+  FILE *f = fopen("clientes", "rb");
+  if(f == NULL)
+    return 1;
+
+  int e = fread(clientes, total, sizeof(Cliente), f);
+  if(e<=0)
+    return 2;
+
+  e = fread(pos, 1, sizeof(int), f);
+  if(e<=0)
+    return 2;
+
+  e = fclose(f);
+  if(e!=0)
+    return 3;
+
   return 0;
 }
 void clearBuffer(){
