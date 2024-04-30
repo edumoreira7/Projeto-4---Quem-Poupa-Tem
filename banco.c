@@ -84,12 +84,99 @@ int listarC(Cliente clientes[], int pos){
 
   return 0;
 }
-int debito(Cliente clientes[], int pos){
-  printf("funcao de debito\n");
+int debito(Cliente clientes[], int *pos){
+
+  int posD;
+  int cont = 0;
+  long long int cpfDebito;
+  char senhaDebito[100];
+  long int valorDebito;
+  
+  printf("Digite o CPF: ");
+  scanf("%lld", &cpfDebito);
+  clearBuffer();
+
+  for(int i = 0; i<*pos; i++){
+    if (cpfDebito == clientes[i].CPF){
+      posD = i;
+      cont++;
+    }
+  }
+  if (cont == 0)
+    return 1;
+  else{
+    printf("Digite a senha: ");
+    fgets(senhaDebito, 100, stdin);
+    senhaDebito[strcspn(senhaDebito, "\n")] = 0;
+
+    if (strcmp(clientes[posD].senha, senhaDebito) == 0) {
+      printf("Digite o valor do débito: ");
+      scanf("%ld", &valorDebito);
+
+      if(clientes[posD].tipoConta == 1){
+        if(clientes[posD].valorInicial - valorDebito <= -1001){
+          printf("Saldo insuficiente\n");
+          return 2;
+        }else{
+          int porc = valorDebito * 0.05;
+          clientes[posD].valorInicial -= porc;
+          clientes[posD].valorInicial -= valorDebito;
+        }
+      }else if(clientes[posD].tipoConta == 2){
+        if(clientes[posD].valorInicial - valorDebito <= -5001){
+          printf("Saldo insuficiente\n");
+          return 2;
+        }else{
+          int porc = valorDebito * 0.03;
+          clientes[posD].valorInicial -= porc;
+          clientes[posD].valorInicial -= valorDebito;
+        }
+      }
+      printf("Saldo atual: %ld", clientes[posD].valorInicial);
+    }else {
+      printf("Senha incorreta");
+      return 2;
+    }
+  }
+  
   return 0;
 }
-int deposito(Cliente clientes[], int pos){
-  printf("funcao de deposito\n");
+int deposito(Cliente clientes[], int *pos){
+  
+  long long cpfD;
+  int posD;
+  int cont = 0;
+  char senhaD[100];
+  long int valorDeposito;
+  
+  printf("Digite seu CPF: ");
+  scanf("%lld", &cpfD);
+  clearBuffer();
+
+  for(int i = 0; i<*pos; i++){
+    if (cpfD == clientes[i].CPF){
+      posD = i;
+      cont++;
+    }
+  }
+  if (cont == 0){
+    return 1;
+  }else{
+    printf("Digite a senha: ");
+    fgets(senhaD, 100, stdin);
+    senhaD[strcspn(senhaD, "\n")] = 0;
+
+    if (strcmp(clientes[posD].senha, senhaD) == 0) {
+      printf("Digite o valor do deposito: ");
+      scanf("%ld", &valorDeposito);
+      clientes[posD].valorInicial += valorDeposito;
+      printf("Saldo atual: %ld", clientes[posD].valorInicial);
+    }else{
+      printf("Senha incorreta");
+      return 2;
+    }
+  }
+  
   return 0;
 }
 int extrato(Cliente clientes[], int pos){

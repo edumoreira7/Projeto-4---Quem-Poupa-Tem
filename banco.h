@@ -11,8 +11,8 @@ typedef struct Cliente {
 int adicionarC(Cliente clientes[], int *pos);
 int deletarC(Cliente clientes[], int *pos);
 int listarC(Cliente clientes[], int pos);
-int debito(Cliente clientes[], int pos);
-int deposito(Cliente clientes[], int pos);
+int debito(Cliente clientes[], int *pos);
+int deposito(Cliente clientes[], int *pos);
 int extrato(Cliente clientes[], int pos);
 int transferencia(Cliente clientes[], int pos);
 
