@@ -2,9 +2,9 @@
 
 typedef struct Cliente {
   char nome[100];
-  int CPF;
-  int tipoConta[100];
-  int valorInicial;
+  long long int CPF;
+  int tipoConta;
+  long int valorInicial;
   char senha[100];
 } Cliente;
 
@@ -18,3 +18,4 @@ int transferencia(Cliente clientes[], int pos);
 
 int salvarC(Cliente clientes[], int total, int pos);
 int carregarC(Cliente clientes[], int total, int pos);
+void clearBuffer();
