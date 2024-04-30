@@ -33,7 +33,40 @@ int adicionarC(Cliente clientes[], int *pos){
   return 0;
 }
 int deletarC(Cliente clientes[], int *pos){
-  printf("funcao de deletar contato\n");
+  if(*pos == 0)
+    return 1;
+
+  int pos_d;
+
+  long long int numero_d;
+  printf("Entre o CPF da conta que deseja deletar: ");
+  scanf("%lld", &numero_d);
+
+  int cont = 1;
+
+  for(int i = 0; i<*pos; i++){
+    if (numero_d == clientes[i].CPF){
+      pos_d = i;
+    }else{
+      cont = 0;
+    }
+  }
+  if(pos_d >= *pos)
+    return 2;
+
+  for(int i = pos_d; i<*pos; i++){
+    clientes[i].CPF = clientes[i + 1].CPF;
+    strcpy(clientes[i].nome, clientes[i + 1].nome);
+    clientes[i].tipoConta = clientes[i + 1].tipoConta;
+    clientes[i].valorInicial = clientes[i + 1].valorInicial;
+    strcpy(clientes[i].senha, clientes[i + 1].senha);
+  }
+
+  *pos = *pos - 1;
+
+  if(cont == 0)
+    return 2;
+
   return 0;
 }
 int listarC(Cliente clientes[], int pos){
