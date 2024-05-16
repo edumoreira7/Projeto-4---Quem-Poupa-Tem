@@ -92,7 +92,7 @@ int debito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
   char senhaDebito[100];
   long int valorDebito;
   int porc;
-  
+
   printf("Digite o CPF: ");
   scanf("%lld", &cpfDebito);
   clearBuffer();
@@ -147,18 +147,18 @@ int debito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
       return 2;
     }
   }
-  
+
   return 0;
 }
 int deposito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
-  
+
   long long cpfD;
   int posD;
   int cont = 0;
   char senhaD[100];
   long int valorDeposito;
   int porc = 0;
-  
+
   printf("Digite seu CPF: ");
   scanf("%lld", &cpfD);
   clearBuffer();
@@ -193,7 +193,7 @@ int deposito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
       return 2;
     }
   }
-  
+
   return 0;
 }
 int extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
@@ -202,7 +202,7 @@ int extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
   int cont = 0;
   char senhaE[100];
   long int valorDeposito;
-  
+
 
   printf("Digite seu CPF: ");
   scanf("%lld", &cpfE);
@@ -228,8 +228,8 @@ int extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
 
       int qtd = 0;
 
-      fprintf(f, "Nome: %s\n", clientes[posExtrato].nome);
-      fprintf(f, "CPF: %lld\n", clientes[posExtrato].CPF);
+      fprintf(f, "Nome: %s\t", clientes[posExtrato].nome);
+      fprintf(f, "CPF: %lld\t", clientes[posExtrato].CPF);
       if(clientes[posExtrato].tipoConta == 1)
         fprintf(f, "Tipo da conta: Comum\n");
       else if(clientes[posExtrato].tipoConta == 2)
@@ -243,7 +243,7 @@ int extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
               fprintf(f, "+%d\t", extratoC[i].valor);
             fprintf(f, "Taxa: %d\t", extratoC[i].taxa);
             fprintf(f, "Saldo: %ld\n", extratoC[i].saldo);
-            
+
             qtd = qtd + 1;
          }
       }
@@ -258,8 +258,79 @@ int extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
 
   return 0;
 }
-int transferencia(Cliente clientes[], Extrato extrato[], int pos, int *posE){
-  printf("funcao de transferencia\n");
+int transferencia(Cliente clientes[], Extrato extrato[], int *pos, int *posE){
+  long long cpfT;
+  long long cpfT2;
+  int posT;
+  int posT2;
+  int cont = 0;
+  char senhaT[100];
+  long int valorTrans;
+
+  printf("Digite seu CPF: ");
+  scanf("%lld", &cpfT);
+  clearBuffer();
+
+  for(int i = 0; i<*pos; i++){
+    if (cpfT == clientes[i].CPF){
+      posT = i;
+      cont++;
+    }
+  }
+  if (cont == 0){
+    return 1;
+  }else{
+      cont = 0;
+      printf("Digite a senha: ");
+      fgets(senhaT, 100, stdin);
+      senhaT[strcspn(senhaT, "\n")] = 0;
+
+      if (strcmp(clientes[posT].senha, senhaT) == 0) 
+        printf("Digite o CPF da conta que deseja transferir: ");
+        scanf("%lld", &cpfT2);
+        for(int i = 0; i<*pos; i++){
+          if (cpfT2 == clientes[i].CPF){
+            posT2 = i;
+            cont++;
+          }
+        }
+        if (cont == 0){
+          return 1;
+        }
+        printf("Digite o valor da transfêrencia: ");
+        scanf("%ld", &valorTrans);
+        }
+        if(clientes[posT].tipoConta == 1){
+          if(clientes[posT].valorInicial - valorTrans <= -1001){
+            printf("Saldo insuficiente\n");
+            return 2;
+          }else{
+            clientes[posT].valorInicial -= valorTrans;
+            clientes[posT2].valorInicial += valorTrans;
+            printf("Saldo atual: %ld", clientes[posT].valorInicial);
+          }
+        }else if(clientes[posT].tipoConta == 2){
+          if(clientes[posT].valorInicial - valorTrans <= -5001){
+            printf("Saldo insuficiente\n");
+            return 2;
+          }else{
+            clientes[posT].valorInicial -= valorTrans;
+            clientes[posT2].valorInicial += valorTrans;
+            printf("Saldo atual: %ld", clientes[posT].valorInicial);
+          }
+        }
+        //adicionando dados no extrato
+        extrato[*posE].CPF = clientes[posT].CPF;
+        extrato[*posE].saldo = clientes[posT].valorInicial;
+        extrato[*posE].taxa = 0;
+        extrato[*posE].valor = -valorTrans;
+        *posE = *posE + 1;
+        extrato[*posE].CPF = clientes[posT2].CPF;
+        extrato[*posE].saldo = clientes[posT2].valorInicial;
+        extrato[*posE].taxa = 0;
+        extrato[*posE].valor = valorTrans;
+        *posE = *posE + 1;
+    
   return 0;
 }
 
@@ -301,6 +372,45 @@ int carregarC(Cliente clientes[], int total, int *pos){
 
   return 0;
 }
+int salvarE(Extrato extratoC[], int total_extrato, int posE){
+  FILE *f = fopen("extrato", "wb");
+  if(f == NULL)
+    return 1;
+
+  int e = fwrite(extratoC, total_extrato, sizeof(Extrato), f);
+    if(e<=0)
+      return 2;
+
+  e = fwrite(&posE, 1, sizeof(int), f);
+  if(e<=0)
+    return 2;
+
+  e = fclose(f);
+  if(e!=0)
+    return 3;
+
+  return 0;
+}
+int carregarE(Extrato extratoC[], int total_extrato, int *posE){
+  FILE *f = fopen("extrato", "rb");
+  if(f == NULL)
+    return 1;
+
+  int e = fread(extratoC, total_extrato, sizeof(Extrato), f);
+  if(e<=0)
+    return 2;
+
+  e = fread(posE, 1, sizeof(int), f);
+  if(e<=0)
+    return 2;
+
+  e = fclose(f);
+  if(e!=0)
+    return 3;
+
+  return 0;
+}
+    
 void clearBuffer(){
   int c;
   while ((c = getchar()) != '\n' && c != EOF) { }
