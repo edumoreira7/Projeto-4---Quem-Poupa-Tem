@@ -3,7 +3,9 @@
 
 int main(){
   int pos = 0;
+  int posE = 0;
   Cliente clientes[TOTAL];
+  Extrato extratoC[TOTAL_EXTRATO];
 
   carregarC(clientes, TOTAL, &pos);
 
@@ -22,6 +24,7 @@ int main(){
     printf("Escolha uma opcao: ");
 
     scanf("%d", &opcao);
+    printf("\n");
     clearBuffer();
     
     if(opcao > 7){
@@ -33,13 +36,13 @@ int main(){
     }else if (opcao == 3){
       listarC(clientes, pos);
     }else if(opcao == 4) {
-      debito(clientes, &pos);
+      debito(clientes, extratoC, &pos, &posE);
     }else if (opcao == 5){
-      deposito(clientes, &pos);
+      deposito(clientes, extratoC, &pos, &posE);
     }else if (opcao == 6){
-      extrato(clientes, pos);
+      extrato(clientes, extratoC, &pos, &posE);
     }else if (opcao == 7){
-      transferencia(clientes, pos);
+      transferencia(clientes, extratoC, pos, &posE);
     }else if (opcao == 0){
       printf("Saindo...");
       salvarC(clientes, TOTAL, pos);
