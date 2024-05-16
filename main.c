@@ -8,6 +8,7 @@ int main(){
   Extrato extratoC[TOTAL_EXTRATO];
 
   carregarC(clientes, TOTAL, &pos);
+  carregarE(extratoC, TOTAL_EXTRATO, &posE);
 
   int opcao;
 
@@ -26,7 +27,7 @@ int main(){
     scanf("%d", &opcao);
     printf("\n");
     clearBuffer();
-    
+
     if(opcao > 7){
       printf("Opcao invalida\n");
     }else if (opcao == 1){
@@ -42,10 +43,11 @@ int main(){
     }else if (opcao == 6){
       extrato(clientes, extratoC, &pos, &posE);
     }else if (opcao == 7){
-      transferencia(clientes, extratoC, pos, &posE);
+      transferencia(clientes, extratoC, &pos, &posE);
     }else if (opcao == 0){
       printf("Saindo...");
       salvarC(clientes, TOTAL, pos);
+      salvarE(extratoC, TOTAL_EXTRATO, posE);
       break;
     }
 

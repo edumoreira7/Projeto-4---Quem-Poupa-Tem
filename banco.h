@@ -23,8 +23,10 @@ int listarC(Cliente clientes[], int pos);
 int debito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE);
 int deposito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE);
 int extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE);
-int transferencia(Cliente clientes[], Extrato extrato[], int pos, int *posE);
+int transferencia(Cliente clientes[], Extrato extrato[], int *pos, int *posE);
 
 int salvarC(Cliente clientes[], int total, int pos);
 int carregarC(Cliente clientes[], int total, int *pos);
+int salvarE(Extrato extratoC[], int total_extrato, int posE);
+int carregarE(Extrato extratoC[], int total_extrato, int *posE);
 void clearBuffer();
