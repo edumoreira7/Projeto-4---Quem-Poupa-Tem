@@ -7,8 +7,21 @@ int main(){
   Cliente clientes[TOTAL];
   Extrato extratoC[TOTAL_EXTRATO];
 
-  carregarC(clientes, TOTAL, &pos);
-  carregarE(extratoC, TOTAL_EXTRATO, &posE);
+  Erro e = carregarC(clientes, TOTAL, &pos);
+  if(e == ABRIR)
+    printf("Erro ao abrir arquivo\n");
+  else if(e == LER)
+    printf("Erro ao ler arquivo\n");
+  else if(e == LER)
+    printf("Erro ao fechar arquivo\n");
+  
+  e = carregarE(extratoC, TOTAL_EXTRATO, &posE);
+  if(e == ABRIR)
+    printf("Erro ao abrir arquivo\n");
+  else if(e == LER)
+    printf("Erro ao ler arquivo\n");
+  else if(e == LER)
+    printf("Erro ao fechar arquivo\n");
 
   int opcao;
 
@@ -31,23 +44,170 @@ int main(){
     if(opcao > 7){
       printf("Opcao invalida\n");
     }else if (opcao == 1){
-      adicionarC(clientes, &pos);
+      e = adicionarC(clientes, &pos);
+      if(e == MAX_CLIENTES)
+        printf("Limite de clientes atingido\n");
+      else if(e == OK){
+        e = salvarC(clientes, TOTAL, pos);
+        if(e == ABRIR)
+          printf("Erro ao abrir arquivo\n");
+        else if(e == ESCREVER)
+          printf("Erro ao escrever arquivo\n");
+        else if(e == FECHAR)
+          printf("Erro ao fechar arquivo\n");
+
+        e = salvarE(extratoC, TOTAL_EXTRATO, posE);
+        if(e == ABRIR)
+          printf("Erro ao abrir arquivo\n");
+        else if(e == ESCREVER)
+          printf("Erro ao escrever arquivo\n");
+        else if(e == FECHAR)
+          printf("Erro ao fechar arquivo\n");
+      }
+      
     }else if (opcao == 2){
-      deletarC(clientes, &pos);
+      e = deletarC(clientes, &pos);
+      if(e == SEM_CLIENTES)
+        printf("Nao ha clientes cadastrados\n");
+      else if(e == NAO_EXISTE)
+        printf("Cliente nao encontrado\n");
+      else if(e == OK){
+        e = salvarC(clientes, TOTAL, pos);
+        if(e == ABRIR)
+          printf("Erro ao abrir arquivo\n");
+        else if(e == ESCREVER)
+          printf("Erro ao escrever arquivo\n");
+        else if(e == FECHAR)
+          printf("Erro ao fechar arquivo\n");
+
+        e = salvarE(extratoC, TOTAL_EXTRATO, posE);
+        if(e == ABRIR)
+          printf("Erro ao abrir arquivo\n");
+        else if(e == ESCREVER)
+          printf("Erro ao escrever arquivo\n");
+        else if(e == FECHAR)
+          printf("Erro ao fechar arquivo\n");
+      }
+      
     }else if (opcao == 3){
-      listarC(clientes, pos);
+      e = listarC(clientes, pos);
+      if(e == SEM_CLIENTES)
+        printf("Nao ha clientes cadastrados\n");
+      
     }else if(opcao == 4) {
-      debito(clientes, extratoC, &pos, &posE);
+      e = debito(clientes, extratoC, &pos, &posE);
+      if(e == SEM_CLIENTES)
+        printf("Nao ha clientes cadastrados\n");
+      else if(e == NAO_EXISTE)
+        printf("Cliente nao encontrado\n");
+      else if(e == SALDO_INSUFICIENTE)
+        printf("Saldo insuficiente\n");
+      else if(e == SENHA_INCORRETA)
+        printf("Senha incorreta\n");
+      else if(e == OK){
+        e = salvarC(clientes, TOTAL, pos);
+        if(e == ABRIR)
+          printf("Erro ao abrir arquivo\n");
+        else if(e == ESCREVER)
+          printf("Erro ao escrever arquivo\n");
+        else if(e == FECHAR)
+          printf("Erro ao fechar arquivo\n");
+
+        e = salvarE(extratoC, TOTAL_EXTRATO, posE);
+        if(e == ABRIR)
+          printf("Erro ao abrir arquivo\n");
+        else if(e == ESCREVER)
+          printf("Erro ao escrever arquivo\n");
+        else if(e == FECHAR)
+          printf("Erro ao fechar arquivo\n");
+      }
+
     }else if (opcao == 5){
-      deposito(clientes, extratoC, &pos, &posE);
+      e = deposito(clientes, extratoC, &pos, &posE);
+      if(e == SEM_CLIENTES)
+        printf("Nao ha clientes cadastrados\n");
+      else if(e == NAO_EXISTE)
+        printf("Cliente nao encontrado\n");
+      else if(e == SENHA_INCORRETA)
+        printf("Senha incorreta\n");
+      else if(e == OK){
+        e = salvarC(clientes, TOTAL, pos);
+        if(e == ABRIR)
+          printf("Erro ao abrir arquivo\n");
+        else if(e == ESCREVER)
+          printf("Erro ao escrever arquivo\n");
+        else if(e == FECHAR)
+          printf("Erro ao fechar arquivo\n");
+
+        e = salvarE(extratoC, TOTAL_EXTRATO, posE);
+        if(e == ABRIR)
+          printf("Erro ao abrir arquivo\n");
+        else if(e == ESCREVER)
+          printf("Erro ao escrever arquivo\n");
+        else if(e == FECHAR)
+          printf("Erro ao fechar arquivo\n");
+      }
+        
+        
     }else if (opcao == 6){
-      extrato(clientes, extratoC, &pos, &posE);
+      e = extrato(clientes, extratoC, &pos, &posE);
+      if(e == SEM_CLIENTES)
+        printf("Nao ha clientes cadastrados\n");
+      else if(e == NAO_EXISTE)
+        printf("Cliente nao encontrado\n");
+      else if(e == ABRIR)
+        printf("Erro ao abrir arquivo\n");
+      else if(e == SEM_OPERACOES)
+        printf("Não existem operações nesta conta\n");
+      else if(e == FECHAR)
+        printf("Erro ao fechar arquivo\n");
+      else if(e == SENHA_INCORRETA)
+        printf("Senha incorreta\n");
+
+        
     }else if (opcao == 7){
-      transferencia(clientes, extratoC, &pos, &posE);
+      e = transferencia(clientes, extratoC, &pos, &posE);
+      if(e == SEM_CLIENTES)
+        printf("Nao ha clientes cadastrados\n");
+      else if(e == NAO_EXISTE)
+        printf("Cliente nao encontrado\n");
+      else if(e == SALDO_INSUFICIENTE)
+        printf("Saldo insuficiente\n");
+      else if(e == OK){
+        e = salvarC(clientes, TOTAL, pos);
+        if(e == ABRIR)
+          printf("Erro ao abrir arquivo\n");
+        else if(e == ESCREVER)
+          printf("Erro ao escrever arquivo\n");
+        else if(e == FECHAR)
+          printf("Erro ao fechar arquivo\n");
+
+        e = salvarE(extratoC, TOTAL_EXTRATO, posE);
+        if(e == ABRIR)
+          printf("Erro ao abrir arquivo\n");
+        else if(e == ESCREVER)
+          printf("Erro ao escrever arquivo\n");
+        else if(e == FECHAR)
+          printf("Erro ao fechar arquivo\n");
+      }
+      
     }else if (opcao == 0){
       printf("Saindo...");
-      salvarC(clientes, TOTAL, pos);
-      salvarE(extratoC, TOTAL_EXTRATO, posE);
+      e = salvarC(clientes, TOTAL, pos);
+      if(e == ABRIR)
+        printf("Erro ao abrir arquivo\n");
+      else if(e == ESCREVER)
+        printf("Erro ao escrever arquivo\n");
+      else if(e == FECHAR)
+        printf("Erro ao fechar arquivo\n");
+      
+      e = salvarE(extratoC, TOTAL_EXTRATO, posE);
+      if(e == ABRIR)
+        printf("Erro ao abrir arquivo\n");
+      else if(e == ESCREVER)
+        printf("Erro ao escrever arquivo\n");
+      else if(e == FECHAR)
+        printf("Erro ao fechar arquivo\n");
       break;
     }
 

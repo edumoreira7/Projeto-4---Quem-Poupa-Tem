@@ -16,17 +16,18 @@ typedef struct Extrato {
   int valor;
 } Extrato;
 
+typedef enum Erros {OK, MAX_CLIENTES, SEM_CLIENTES, NAO_EXISTE, SALDO_INSUFICIENTE, SENHA_INCORRETA, ABRIR, SEM_OPERACOES, FECHAR, ESCREVER, LER} Erro;
 
-int adicionarC(Cliente clientes[], int *pos);
-int deletarC(Cliente clientes[], int *pos);
-int listarC(Cliente clientes[], int pos);
-int debito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE);
-int deposito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE);
-int extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE);
-int transferencia(Cliente clientes[], Extrato extrato[], int *pos, int *posE);
+Erro adicionarC(Cliente clientes[], int *pos);
+Erro deletarC(Cliente clientes[], int *pos);
+Erro listarC(Cliente clientes[], int pos);
+Erro debito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE);
+Erro deposito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE);
+Erro extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE);
+Erro transferencia(Cliente clientes[], Extrato extrato[], int *pos, int *posE);
 
-int salvarC(Cliente clientes[], int total, int pos);
-int carregarC(Cliente clientes[], int total, int *pos);
-int salvarE(Extrato extratoC[], int total_extrato, int posE);
-int carregarE(Extrato extratoC[], int total_extrato, int *posE);
+Erro salvarC(Cliente clientes[], int total, int pos);
+Erro carregarC(Cliente clientes[], int total, int *pos);
+Erro salvarE(Extrato extratoC[], int total_extrato, int posE);
+Erro carregarE(Extrato extratoC[], int total_extrato, int *posE);
 void clearBuffer();

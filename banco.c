@@ -2,9 +2,9 @@
 #include <stdio.h>
 #include <string.h>
 
-int adicionarC(Cliente clientes[], int *pos){
+Erro adicionarC(Cliente clientes[], int *pos){
   if (*pos >= TOTAL)
-    return 1;
+    return MAX_CLIENTES;
 
   printf("Digite o CPF: ");
   scanf("%lld", &clientes[*pos].CPF);
@@ -30,11 +30,11 @@ int adicionarC(Cliente clientes[], int *pos){
 
   *pos = *pos +1;
 
-  return 0;
+  return OK;
 }
-int deletarC(Cliente clientes[], int *pos){
+Erro deletarC(Cliente clientes[], int *pos){
   if(*pos == 0)
-    return 1;
+    return SEM_CLIENTES;
 
   int pos_d;
 
@@ -51,9 +51,9 @@ int deletarC(Cliente clientes[], int *pos){
       cont = 0;
     }
   }
-  if(pos_d >= *pos)
-    return 2;
-
+  if(pos_d >= *pos || cont == 0){
+    return NAO_EXISTE;
+  }
   for(int i = pos_d; i<*pos; i++){
     clientes[i].CPF = clientes[i + 1].CPF;
     strcpy(clientes[i].nome, clientes[i + 1].nome);
@@ -64,14 +64,11 @@ int deletarC(Cliente clientes[], int *pos){
 
   *pos = *pos - 1;
 
-  if(cont == 0)
-    return 2;
-
-  return 0;
+  return OK;
 }
-int listarC(Cliente clientes[], int pos){
+Erro listarC(Cliente clientes[], int pos){
   if(pos == 0)
-    return 1;
+    return SEM_CLIENTES;
 
   for(int i=0; i<pos; i++){
     printf("Nome: %s\n", clientes[i].nome);
@@ -82,10 +79,12 @@ int listarC(Cliente clientes[], int pos){
     printf("------------------------\n");
   }
 
-  return 0;
+  return OK  ;
 }
-int debito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
-
+Erro debito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
+  if(*pos == 0)
+    return SEM_CLIENTES;
+  
   int posD;
   int cont = 0;
   long long int cpfDebito;
@@ -104,7 +103,7 @@ int debito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
     }
   }
   if (cont == 0)
-    return 1;
+    return NAO_EXISTE;
   else{
     printf("Digite a senha: ");
     fgets(senhaDebito, 100, stdin);
@@ -118,8 +117,7 @@ int debito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
 
       if(clientes[posD].tipoConta == 1){
         if(clientes[posD].valorInicial - valorDebito <= -1001){
-          printf("Saldo insuficiente\n");
-          return 2;
+          return SALDO_INSUFICIENTE;
         }else{
           int porc = valorDebito * 0.05;
           clientes[posD].valorInicial -= porc;
@@ -127,8 +125,7 @@ int debito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
         }
       }else if(clientes[posD].tipoConta == 2){
         if(clientes[posD].valorInicial - valorDebito <= -5001){
-          printf("Saldo insuficiente\n");
-          return 2;
+          return SALDO_INSUFICIENTE;
         }else{
           porc = valorDebito * 0.03;
           clientes[posD].valorInicial -= porc;
@@ -143,15 +140,16 @@ int debito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
 
       *posE = *posE + 1;
     }else {
-      printf("Senha incorreta");
-      return 2;
+      return SENHA_INCORRETA;;
     }
   }
 
-  return 0;
+  return OK;
 }
-int deposito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
-
+Erro deposito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
+  if(*pos == 0)
+    return SEM_CLIENTES;
+  
   long long cpfD;
   int posD;
   int cont = 0;
@@ -170,7 +168,7 @@ int deposito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
     }
   }
   if (cont == 0){
-    return 1;
+    return NAO_EXISTE;
   }else{
     printf("Digite a senha: ");
     fgets(senhaD, 100, stdin);
@@ -189,14 +187,16 @@ int deposito(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
 
       *posE = *posE + 1;
     }else{
-      printf("Senha incorreta");
-      return 2;
+      return SENHA_INCORRETA;
     }
   }
 
-  return 0;
+  return OK;
 }
-int extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
+Erro extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
+  if(*pos == 0)
+    return SEM_CLIENTES;
+  
   long long cpfE;
   int posExtrato;
   int cont = 0;
@@ -215,7 +215,8 @@ int extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
     }
   }
   if (cont == 0){
-    return 1;
+    return NAO_EXISTE;
+    
   }else{
     printf("Digite a senha: ");
     fgets(senhaE, 100, stdin);
@@ -224,7 +225,7 @@ int extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
     if (strcmp(clientes[posExtrato].senha, senhaE) == 0) {
       FILE *f = fopen("extrato.txt", "w"); 
       if(f == NULL)
-          return 1;
+          return ABRIR;
 
       int qtd = 0;
 
@@ -241,24 +242,29 @@ int extrato(Cliente clientes[], Extrato extratoC[], int *pos, int *posE){
               fprintf(f, "%d\t", extratoC[i].valor);
             else
               fprintf(f, "+%d\t", extratoC[i].valor);
+           
             fprintf(f, "Taxa: %d\t", extratoC[i].taxa);
             fprintf(f, "Saldo: %ld\n", extratoC[i].saldo);
 
             qtd = qtd + 1;
          }
       }
+      if (qtd == 0)
+        return SEM_OPERACOES;
 
       if (fclose(f) != 0)
-          return 1;
+          return FECHAR;
     }else{
-      printf("Senha incorreta");
-      return 2;
+      return SENHA_INCORRETA;
     }
   }
 
-  return 0;
+  return OK;
 }
-int transferencia(Cliente clientes[], Extrato extrato[], int *pos, int *posE){
+Erro transferencia(Cliente clientes[], Extrato extrato[], int *pos, int *posE){
+  if(*pos == 0)
+    return SEM_CLIENTES;
+  
   long long cpfT;
   long long cpfT2;
   int posT;
@@ -278,7 +284,7 @@ int transferencia(Cliente clientes[], Extrato extrato[], int *pos, int *posE){
     }
   }
   if (cont == 0){
-    return 1;
+    return NAO_EXISTE;;
   }else{
       cont = 0;
       printf("Digite a senha: ");
@@ -302,8 +308,7 @@ int transferencia(Cliente clientes[], Extrato extrato[], int *pos, int *posE){
         }
         if(clientes[posT].tipoConta == 1){
           if(clientes[posT].valorInicial - valorTrans <= -1001){
-            printf("Saldo insuficiente\n");
-            return 2;
+            return SALDO_INSUFICIENTE;
           }else{
             clientes[posT].valorInicial -= valorTrans;
             clientes[posT2].valorInicial += valorTrans;
@@ -311,8 +316,7 @@ int transferencia(Cliente clientes[], Extrato extrato[], int *pos, int *posE){
           }
         }else if(clientes[posT].tipoConta == 2){
           if(clientes[posT].valorInicial - valorTrans <= -5001){
-            printf("Saldo insuficiente\n");
-            return 2;
+            return SALDO_INSUFICIENTE;
           }else{
             clientes[posT].valorInicial -= valorTrans;
             clientes[posT2].valorInicial += valorTrans;
@@ -331,84 +335,84 @@ int transferencia(Cliente clientes[], Extrato extrato[], int *pos, int *posE){
         extrato[*posE].valor = valorTrans;
         *posE = *posE + 1;
     
-  return 0;
+  return OK;
 }
 
-int salvarC(Cliente clientes[], int total, int pos){
+Erro salvarC(Cliente clientes[], int total, int pos){
   FILE *f = fopen("clientes", "wb");
   if(f == NULL)
-    return 1;
+    return ABRIR;
 
   int e = fwrite(clientes, total, sizeof(Cliente), f);
     if(e<=0)
-      return 2;
+      return ESCREVER;
 
   e = fwrite(&pos, 1, sizeof(int), f);
   if(e<=0)
-    return 2;
+    return ESCREVER;
 
   e = fclose(f);
   if(e!=0)
-    return 3;
+    return FECHAR;
 
   return 0;
 }
-int carregarC(Cliente clientes[], int total, int *pos){
+Erro carregarC(Cliente clientes[], int total, int *pos){
   FILE *f = fopen("clientes", "rb");
   if(f == NULL)
-    return 1;
+    return ABRIR;
 
   int e = fread(clientes, total, sizeof(Cliente), f);
   if(e<=0)
-    return 2;
+    return ESCREVER;
 
   e = fread(pos, 1, sizeof(int), f);
   if(e<=0)
-    return 2;
+    return ESCREVER;
 
   e = fclose(f);
   if(e!=0)
-    return 3;
+    return FECHAR;
 
-  return 0;
+  return OK;
 }
-int salvarE(Extrato extratoC[], int total_extrato, int posE){
+Erro salvarE(Extrato extratoC[], int total_extrato, int posE){
   FILE *f = fopen("extrato", "wb");
   if(f == NULL)
-    return 1;
+    return ABRIR;
 
   int e = fwrite(extratoC, total_extrato, sizeof(Extrato), f);
     if(e<=0)
-      return 2;
+      return LER;
 
   e = fwrite(&posE, 1, sizeof(int), f);
   if(e<=0)
-    return 2;
+    return LER;
 
   e = fclose(f);
   if(e!=0)
-    return 3;
+    return FECHAR;
 
-  return 0;
+  return OK;
 }
-int carregarE(Extrato extratoC[], int total_extrato, int *posE){
+Erro carregarE(Extrato extratoC[], int total_extrato, int *posE){
   FILE *f = fopen("extrato", "rb");
   if(f == NULL)
-    return 1;
+    return ABRIR;
 
   int e = fread(extratoC, total_extrato, sizeof(Extrato), f);
   if(e<=0)
-    return 2;
+    return LER;
 
   e = fread(posE, 1, sizeof(int), f);
   if(e<=0)
-    return 2;
+    return LER;
 
   e = fclose(f);
   if(e!=0)
-    return 3;
+    return FECHAR;
 
-  return 0;
+  return OK;
 }
     
 void clearBuffer(){
