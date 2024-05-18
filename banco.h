@@ -1,12 +1,12 @@
-#define TOTAL 100
+#define TOTAL 1000
 #define TOTAL_EXTRATO 100
 
 typedef struct Cliente {
-  char nome[100];
+  char nome[600];
   long long int CPF;
   int tipoConta;
   long int valorInicial;
-  char senha[100];
+  char senha[500];
 } Cliente;
 
 typedef struct Extrato {
